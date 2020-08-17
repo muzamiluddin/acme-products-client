@@ -1,25 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import Header from './components/layout/header';
+import Footer from './components/layout/footer';
+import Home from './components/home';
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { Store } from "./context/store";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    // Wrap the whole application in context provider
+    <Store>
+      <BrowserRouter>
+        <Header />
+        <div className="main-container">
+          <Switch>
+            <Route path="/" component={Home} exact />
+          </Switch>
+        </div>
+        <Footer />
+      </BrowserRouter>
+    </Store>
   );
 }
 
