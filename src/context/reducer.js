@@ -6,14 +6,15 @@ const reducer = (state, action) => {
     case "UPDATE_PRODUCTS":
       return updateProducts(state, payload);
     case "UPDATE_DEPARTMENTS":
-      return { ...state, departments: payload}
+      debugger;
+      return { ...state, departments: payload };
     default:
       return state;
   }
 };
 
 function updateProducts(state, products) {
-  return {...state, products: products}
+  return { ...state, products: products };
 }
 
 export default reducer;
