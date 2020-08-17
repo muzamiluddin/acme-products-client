@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./layout/header";
 import Footer from "./layout/footer";
 import { Context } from "../context/store";
 import axios from "axios";
 import request from "../config/request";
+import { Link } from "react-router-dom";
+
 import {
   UPDATE_PRODUCTS,
   UPDATE_DEPARTMENTS,
@@ -12,6 +14,9 @@ import Product from "./product/product";
 
 function Home() {
   const { state, dispatch } = React.useContext(Context);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState([]);
+  const [searchTerm, setSearchTerm] = useState([]);
 
   const updateDepartments = (res) => {
     dispatch({
@@ -27,14 +32,21 @@ function Home() {
     });
   };
 
+  const loadProductsPage = (page) => {
+    page = page || 1;
+    request.get(`/v1/products?page=${page}`).then((res) => {
+      updateProducts(res.data.products);
+      setTotalPages(res.data.total_pages);
+      setCurrentPage(page);
+    });
+  };
+
   useEffect(() => {
     request.get(`/v1/departments`).then((res) => {
       updateDepartments(res.data);
     });
 
-    request.get(`/v1/products`).then((res) => {
-      updateProducts(res.data);
-    });
+    loadProductsPage(1);
   }, []);
 
   return (
@@ -57,6 +69,30 @@ function Home() {
               {state.products &&
                 state.products.map((product) => <Product product={product} />)}
             </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6"></div>
+          <div class="col-6">
+            <nav aria-label="Page navigation example" className="pull-right">
+              <ul class="pagination">
+                {totalPages &&
+                  totalPages > 1 &&
+                  Array.apply(null, { length: totalPages }).map((e, i) => (
+                    <li className="page-item">
+                      <button
+                        className={`btn ${
+                          currentPage === i + 1 ? "btn-primary" : "btn-light"
+                        }`}
+                        onClick={() => loadProductsPage(i + 1)}
+                      >
+                        {i + 1}
+                      </button>
+                    </li>
+                  ))}
+              </ul>
+            </nav>
           </div>
         </div>
       </div>
