@@ -5,13 +5,15 @@ const reducer = (state, action) => {
   switch (action.type) {
     case "UPDATE_PRODUCTS":
       return updateProducts(state, payload);
+    case "UPDATE_DEPARTMENTS":
+      return { ...state, departments: payload}
     default:
       return state;
   }
 };
 
-function updateProducts(state, task) {
-  return state;
+function updateProducts(state, products) {
+  return {...state, products: products}
 }
 
 export default reducer;

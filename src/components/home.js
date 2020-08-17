@@ -1,48 +1,53 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "./layout/header";
 import Footer from "./layout/footer";
+import { Context } from "../context/store"
+import { UPDATE_PRODUCTS, UPDATE_DEPARTMENTS } from "../context/reducer_actions";
+import request from "../config/request";
 
 function Home() {
+    const { state, dispatch } = React.useContext(Context);
+
+    const updateDepartments = (res) => {
+        this.dispatch({
+            type: UPDATE_DEPARTMENTS,
+            payload: res
+           });
+    };
+
+    const updateProducts = ( res ) => {
+        this.dispatch({
+            type: UPDATE_PRODUCTS,
+            payload: res
+           }
+        );
+    };
+    
+    useEffect(() => {
+        request.get(`/v1/departments`)
+        .then(res => {
+           updateDepartments(res);
+        })
+
+        request.get(`/v1/products`)
+        .then(res => {
+           updateProducts(res);
+        })
+    });
+
     return (
         <div className="layout">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-3">
-                        <h1 class="my-4">Shop Name</h1>
+                        <h1 class="my-4">Acme Store</h1>
                         <div class="list-group">
-                            <a href="#" class="list-group-item">Category 1</a>
-                            <a href="#" class="list-group-item">Category 2</a>
-                            <a href="#" class="list-group-item">Category 3</a>
+                            {state.departments.map((department) => (
+                                <a href="#" class="list-group-item">{department.name}</a>
+                            ))}
                         </div>
                     </div>
                     <div class="col-lg-9">
-                        <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
-                            <ol class="carousel-indicators">
-                                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                                <li data-target="#carouselExampleIndicators" data-slide-to="1" class=""></li>
-                                <li data-target="#carouselExampleIndicators" data-slide-to="2" class=""></li>
-                            </ol>
-                            <div class="carousel-inner" role="listbox">
-                                <div class="carousel-item active">
-                                    <img class="d-block img-fluid" src="http://placehold.it/900x350" alt="First slide" />
-                                </div>
-                                <div class="carousel-item">
-                                    <img class="d-block img-fluid" src="http://placehold.it/900x350" alt="Second slide" />
-                                </div>
-                                <div class="carousel-item">
-                                    <img class="d-block img-fluid" src="http://placehold.it/900x350" alt="Third slide" />
-                                </div>
-                            </div>
-                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </div>
-
                         <div class="row">
 
                             <div class="col-lg-4 col-md-6 mb-4">
